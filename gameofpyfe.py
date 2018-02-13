@@ -9,56 +9,59 @@
 import os, time
 
 def print_board(board):
-    # os.system('clear')
+    os.system('clear')
     for row in board:
         print ' '.join(row)
 
-def test_cell(board, x, y):
+def test_cell(board, x, y, size):
     live_neighbors = 0
     this_cell = board[y][x]
     for row_mod in range(-1,2):
         for col_mod in range(-1,2):
-            if x + col_mod < 20 and y + row_mod < 20:
-                if board[y+row_mod][x+col_mod] == 'o' and \
-                (col_mod != 0 and row_mod != 0): ## TODO: This is breaking
+            if x + col_mod >= 0 and x + col_mod < size and \
+            y + row_mod >= 0 and y + row_mod < size:
+                if board[y+row_mod][x+col_mod] == 'O' and \
+                not (col_mod == 0 and row_mod == 0):
                     live_neighbors += 1
-    if this_cell == 'o':
+    if this_cell == 'O':
         if live_neighbors < 2 or live_neighbors > 3:
             return False
         elif live_neighbors == 2 or live_neighbors == 3:
             return True
-    elif this_cell == 'x':
+    elif this_cell == ' ':
         if live_neighbors == 3:
             return True
         else:
             return False
 
+size = 20
 count = 0
 board = []
-for i in range(20):
-    board.append(['x']*20)
+for i in range(size):
+    board.append([' ']*size)
 
-board[2][3] = 'o'
-board[3][3] = 'o'
-board[4][3] = 'o'
+board[2][2] = 'O'
+board[2][3] = 'O'
+board[2][4] = 'O'
+board[1][4] = 'O'
+board[0][3] = 'O'
 print_board(board)
 
-assert test_cell(board, 2, 3) == True, 'Dead cell with 3 neighbors should be True'
-assert test_cell(board, 3, 3) == True, 'Live cell with 2 neighbors should be True'
-assert test_cell(board, 3, 2) == False, 'Live cell with 1 neighbor should be False'
+# assert test_cell(board, 2, 3) == True, 'Dead cell with 3 neighbors should be True'
+# assert test_cell(board, 3, 3) == True, 'Live cell with 2 neighbors should be True'
+# assert test_cell(board, 3, 2) == False, 'Live cell with 1 neighbor should be False'
 
 while True:
     new_board = []
-    for row in range(20):
+    for row in range(size):
         new_board.append([])
-        for column in range(20):
+        for column in range(size):
             new_board[row].append([])
-            print column,row,test_cell(board, column, row)
-            if test_cell(board, column, row):
-                new_board[row][column] = 'o'
+            if test_cell(board, column, row, size):
+                new_board[row][column] = 'O'
             else:
-                new_board[row][column] = 'x'
+                new_board[row][column] = ' '
     print_board(new_board)
     board = new_board
     print_board(board)
-    time.sleep(1)
+    time.sleep(0.3)
