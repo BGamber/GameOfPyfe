@@ -20,31 +20,31 @@ def test_cell(board, x, y, size):
         for col_mod in range(-1,2):
             if x + col_mod >= 0 and x + col_mod < size and \
             y + row_mod >= 0 and y + row_mod < size:
-                if board[y+row_mod][x+col_mod] == 'O' and \
+                if board[y+row_mod][x+col_mod] == '*' and \
                 not (col_mod == 0 and row_mod == 0):
                     live_neighbors += 1
-    if this_cell == 'O':
+    if this_cell == '*':
         if live_neighbors < 2 or live_neighbors > 3:
             return False
         elif live_neighbors == 2 or live_neighbors == 3:
             return True
-    elif this_cell == ' ':
+    elif this_cell == '.':
         if live_neighbors == 3:
             return True
         else:
             return False
 
-size = 20
+size = 52
 count = 0
 board = []
 for i in range(size):
-    board.append([' ']*size)
+    board.append(['.']*size)
 
-board[2][2] = 'O'
-board[2][3] = 'O'
-board[2][4] = 'O'
-board[1][4] = 'O'
-board[0][3] = 'O'
+board[26][26] = '*'
+board[26][27] = '*'
+board[27][25] = '*'
+board[27][26] = '*'
+board[28][26] = '*'
 print_board(board)
 
 # assert test_cell(board, 2, 3) == True, 'Dead cell with 3 neighbors should be True'
@@ -58,10 +58,14 @@ while True:
         for column in range(size):
             new_board[row].append([])
             if test_cell(board, column, row, size):
-                new_board[row][column] = 'O'
+                new_board[row][column] = '*'
             else:
-                new_board[row][column] = ' '
+                new_board[row][column] = '.'
     print_board(new_board)
-    board = new_board
-    print_board(board)
-    time.sleep(0.3)
+    if new_board == board:
+        print 'Simulation stabilized.'
+        break
+    else:
+        board = new_board
+        print_board(board)
+        time.sleep(0.1)
